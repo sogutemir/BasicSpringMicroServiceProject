@@ -1,15 +1,15 @@
 package org.work.userservice.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.work.userservice.entity.User;
 import org.work.userservice.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public User registerUser(User user) {
         return userRepository.save(user);

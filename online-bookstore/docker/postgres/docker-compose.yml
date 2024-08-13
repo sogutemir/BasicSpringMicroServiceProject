@@ -23,6 +23,19 @@ services:
     depends_on:
       - postgres
 
+  book-service:
+    build:
+      context: ../../services/book-service
+    image: book-service:latest
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/book_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123456
+    depends_on:
+      - postgres
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
