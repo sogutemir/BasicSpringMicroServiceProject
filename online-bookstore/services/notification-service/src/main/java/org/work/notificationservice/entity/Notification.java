@@ -1,6 +1,6 @@
-package org.work.orderservice.entity;
+package org.work.notificationservice.entity;
 
-import jakarta.persistence.Entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,16 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "notification")
+public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long userId;
-    private Long bookId;
-    private Integer quantity;
-    private String status;
+    private String message;
+    private String notificationType;
 
 }

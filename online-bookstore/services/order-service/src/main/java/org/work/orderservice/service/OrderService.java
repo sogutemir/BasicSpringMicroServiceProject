@@ -1,8 +1,10 @@
 package org.work.orderservice.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.work.orderservice.dto.OrderDTO;
 import org.work.orderservice.entity.Order;
 import org.work.orderservice.repository.OrderRepository;
 
@@ -10,17 +12,21 @@ import org.work.orderservice.repository.OrderRepository;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final KafkaTemplate<String, Order> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public OrderService(KafkaTemplate<String, Order> kafkaTemplate, OrderRepository orderRepository) {
+    public OrderService(KafkaTemplate<String, String> kafkaTemplate, OrderRepository orderRepository, ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.orderRepository = orderRepository;
+        this.objectMapper = objectMapper;
     }
 
-    public Order createOrder(Order order) {
+    public Order createOrder(Order order) throws Exception {
         Order savedOrder = orderRepository.save(order);
-        kafkaTemplate.send("orders", savedOrder);
+        OrderDTO orderDTO = new OrderDTO(savedOrder.getId(), savedOrder.getUserId(), savedOrder.getBookId(), savedOrder.getQuantity(), savedOrder.getStatus());
+        String orderJson = objectMapper.writeValueAsString(orderDTO);
+        kafkaTemplate.send("orders", orderJson);
         return savedOrder;
     }
 
