@@ -19,8 +19,9 @@ public class OrderService {
     }
 
     public Order createOrder(Order order) {
-        kafkaTemplate.send("orders", order);
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        kafkaTemplate.send("orders", savedOrder);
+        return savedOrder;
     }
 
     public Order getOrderById(Long id) {
